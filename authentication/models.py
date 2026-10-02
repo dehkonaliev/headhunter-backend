@@ -1,0 +1,24 @@
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+from baseapp.models import BaseModel
+from django.utils import timezone
+from datetime import timedelta
+import secrets
+
+
+class CustomUser(AbstractUser, BaseModel):
+    summary = models.CharField(max_length=2000, null=True, blank=True)
+    address = models.CharField(max_length=300, null=True, blank=True)
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
+    profile_photo = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    profile_thumbnail = models.ImageField(upload_to='avatars_thumb/', blank=True, null=True)
+
+
+
+def default_expiry():
+    return timezone.now() + timedelta(minutes=15)
+
+class TempUser(BaseModel):
+    email = models.EmailField(max_length=100)
+    code = models.IntegerField(blank=True, null=True)
+    expiry_time = models.DateTimeField(default=default_expiry)
