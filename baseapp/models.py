@@ -10,15 +10,21 @@ class BaseModel(models.Model):
         abstract = True
 
 class Region(BaseModel):
-    region = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50, unique=True)
     
     def __str__(self):
         return self.region
     
 class District(BaseModel):
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
-    district = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50, unique=True)
     
     def __str__(self):
         return self.district
+
+class Skill(BaseModel):
+    name = models.CharField(max_length=100, unique=True)
+    
+    def __str__(self):
+        return self.skill
     
