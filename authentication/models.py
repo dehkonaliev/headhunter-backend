@@ -22,3 +22,10 @@ class TempUser(BaseModel):
     email = models.EmailField(max_length=100)
     code = models.IntegerField(blank=True, null=True)
     expiry_time = models.DateTimeField(default=default_expiry)
+    
+def generate_token():
+    return secrets.token_urlsafe(32)
+    
+class MyToken(BaseModel):
+    temp_user = models.ForeignKey(TempUser, on_delete=models.CASCADE, related_name='my_tokens')
+    token = models.CharField(max_length=64, default=generate_token)
