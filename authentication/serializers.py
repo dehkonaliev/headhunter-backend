@@ -143,3 +143,18 @@ class LogoutSerializer(serializers.Serializer):
         except Exception:
             return field_error("refresh", "Token is invalid or already blacklisted.")
         return value
+    
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'first_name', 'last_name', 'user_role', 'email', 'phone_number', 'profile_photo', 'profile_thumbnail']
+        read_only_fields = ['id', 'email']
+    
+    def validate_username(self, username):
+        return username_validator(username)
+    
+    def validate_first_name(self, first_name):
+        return name_validator(first_name, "first_name")
+    
+    def validate_last_name(self, last_name):
+        return name_validator(last_name, "last_name")
