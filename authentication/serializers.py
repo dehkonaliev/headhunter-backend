@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import CustomUser, SocialLink, TempUser, MyToken, Experience, Language, Skill, Education, Project, Endorsement, Feedback
-from backend.baseapp.utils import name_validator, username_validator, password_validator, field_error, code_generate
+from .models import CustomUser, TempUser, MyToken
+from baseapp.utils import name_validator, username_validator, password_validator, field_error, code_generate
 from django.contrib.auth import authenticate
 from django.utils import timezone
 from django.db.models import F
@@ -47,7 +47,9 @@ class VerifyCodeSerializer(serializers.ModelSerializer):
         return email
     
     def validate(self, attrs):
-        code = attrs['code']
+        code = attrs.get('code')
+        if not code:
+            return field_error("code", "Code required")
         email = attrs['email']
         
         temp_user = TempUser.objects.filter(email=email).first()
