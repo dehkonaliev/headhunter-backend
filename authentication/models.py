@@ -7,6 +7,10 @@ import secrets
 
 
 class CustomUser(AbstractUser, BaseModel):
+    class UserRole(models.TextChoices):
+        EMPLOYER = 'EMPLOYER', 'employer'
+        EMPLOYEE = 'EMPLOYEE', 'employee'
+    user_role = models.CharField(max_length=20, choices=UserRole.choices, default=UserRole.EMPLOYEE)
     summary = models.CharField(max_length=2000, null=True, blank=True)
     address = models.CharField(max_length=300, null=True, blank=True)
     phone_number = models.CharField(max_length=15, null=True, blank=True)
