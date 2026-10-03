@@ -1,15 +1,15 @@
 from django.db import models
 from authentication.models import CustomUser
-from baseapp.models import BaseModel, District, Skill, Lang
+from baseapp.models import BaseModel, District, Skill, Lang, Category
 
 class Resume(BaseModel):
-    employee = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='resume', limit_choices_to={'user_role': "EMPLOYEE"})
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='resume', limit_choices_to={'user_role': "EMPLOYEE"})
     title = models.CharField(max_length=50)
-    # category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     region = models.ForeignKey(District, on_delete=models.SET_NULL, null=True)
     expected_salary = models.PositiveIntegerField(null=True, blank=True)
     about = models.CharField(max_length=5000, blank=True, null=True)
-    skills = models.ManyToManyField(Skill, related_name="user_skills")
+    skills = models.ManyToManyField(Skill, blank=True, null=True)
     is_public = models.BooleanField(default=True)
     
     def __str__(self):
@@ -17,7 +17,7 @@ class Resume(BaseModel):
     
     
 class Education(BaseModel):
-    employee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='educations', limit_choices_to={"user_role": "EMPLOYEE"})
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='educations', limit_choices_to={"user_role": "EMPLOYEE"})
     institution = models.CharField()
     speciality = models.CharField(max_length=50)
     degree = models.IntegerField(null=True, blank=True)
@@ -28,7 +28,7 @@ class Education(BaseModel):
         return f"{self.employee.first_name} - {self.institution}"
     
 class Experience(BaseModel):
-    employee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='experiences', limit_choices_to={"user_role": "EMPLOYEE"})
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='experiences', limit_choices_to={"user_role": "EMPLOYEE"})
     company_name = models.CharField(max_length=100)
     position = models.CharField(max_length=50)
     start_date = models.DateField()
@@ -36,7 +36,7 @@ class Experience(BaseModel):
     description = models.CharField(max_length=2000)
 
 class Language(BaseModel):
-    employee = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='langs', limit_choices_to={"user_role": "EMPLOYEE"})
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='langs', limit_choices_to={"user_role": "EMPLOYEE"})
     class Levels(models.TextChoices):
         BEGINNER = "BEGINNER", "beginner"
         INTERMEDIATE = "INTERMEDIATE", 'intermediate'

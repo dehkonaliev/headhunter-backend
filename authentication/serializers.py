@@ -148,7 +148,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'first_name', 'last_name', 'user_role', 'email', 'phone_number', 'profile_photo', 'profile_thumbnail']
-        read_only_fields = ['id', 'email']
+        read_only_fields = ['id', 'email', 'user_role']
     
     def validate_username(self, username):
         return username_validator(username)

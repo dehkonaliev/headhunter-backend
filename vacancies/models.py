@@ -1,6 +1,6 @@
 from django.db import models
 from companies.models import Company
-from baseapp.models import BaseModel, District, Skill
+from baseapp.models import BaseModel, District, Skill, Category
 
 class Vacancy(BaseModel):
     class EmployementTypes(models.TextChoices):
@@ -14,7 +14,7 @@ class Vacancy(BaseModel):
         
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     title = models.CharField(max_length=300)
-    # category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     region = models.ForeignKey(District, on_delete=models.SET_NULL, null=True)
     description = models.CharField(max_length=5000)
     requirements = models.CharField(max_length=2000)

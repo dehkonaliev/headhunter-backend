@@ -13,14 +13,14 @@ class Region(BaseModel):
     name = models.CharField(max_length=50, unique=True)
     
     def __str__(self):
-        return self.region
+        return self.name
     
 class District(BaseModel):
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, unique=True)
     
     def __str__(self):
-        return self.district
+        return self.name
 
 class Skill(BaseModel):
     name = models.CharField(max_length=100, unique=True)
@@ -31,4 +31,8 @@ class Skill(BaseModel):
 class Lang(models.Model):
     name = models.CharField(max_length=50, unique=True)
     country_code = models.CharField(max_length=5)
+    
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    
     
