@@ -42,6 +42,10 @@ INSTALLED_APPS = [
     
     'baseapp',
     'authentication',
+    'companies',
+    'resumes',
+    'vacancies',
+    'applications'
 ]
 
 MIDDLEWARE = [
