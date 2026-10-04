@@ -19,7 +19,7 @@ class ResumeCreateAPIView(APIView):
         resume = Resume.objects.filter(user=request.user).exists()
         if resume:
             return error_response(message="Resume already exist")
-        serializer = ResumeSerializer(data=request.data, context={'user': request.user})
+        serializer = ResumeSerializer(data=request.data, context={'resume': resume, 'user': request.user})
         serializer.is_valid(raise_exception=True)
         serializer.save()
         

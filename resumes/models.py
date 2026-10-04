@@ -9,7 +9,7 @@ class Resume(BaseModel):
     region = models.ForeignKey(District, on_delete=models.SET_NULL, null=True)
     expected_salary = models.PositiveIntegerField(null=True, blank=True)
     about = models.CharField(max_length=5000, blank=True, null=True)
-    skills = models.ManyToManyField(Skill, blank=True, null=True)
+    skills = models.ManyToManyField(Skill)
     is_public = models.BooleanField(default=True)
     
     def __str__(self):
@@ -17,18 +17,18 @@ class Resume(BaseModel):
     
     
 class Education(BaseModel):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='educations', limit_choices_to={"user_role": "EMPLOYEE"})
+    resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='educations')
     institution = models.CharField()
     speciality = models.CharField(max_length=50)
-    degree = models.IntegerField(null=True, blank=True)
+    degree = models.CharField(null=True, blank=True)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     
     def __str__(self):
-        return f"{self.employee.first_name} - {self.institution}"
+        return f"{self.resume.user.first_name} - {self.institution}"
     
 class Experience(BaseModel):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='experiences', limit_choices_to={"user_role": "EMPLOYEE"})
+    resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='experiences')
     company_name = models.CharField(max_length=100)
     position = models.CharField(max_length=50)
     start_date = models.DateField()
@@ -36,7 +36,7 @@ class Experience(BaseModel):
     description = models.CharField(max_length=2000)
 
 class Language(BaseModel):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='langs', limit_choices_to={"user_role": "EMPLOYEE"})
+    resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='langs')
     class Levels(models.TextChoices):
         BEGINNER = "BEGINNER", "beginner"
         INTERMEDIATE = "INTERMEDIATE", 'intermediate'
