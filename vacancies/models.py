@@ -24,7 +24,7 @@ class Vacancy(BaseModel):
     employement_type = models.CharField(max_length=50, choices=EmployementTypes.choices)
     skills = models.ManyToManyField(Skill, related_name='required_skills')
     status = models.CharField(max_length=20, choices=StatusChoices.choices, default=StatusChoices.DRAFT)
-    published_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    published_at = models.DateTimeField(blank=True, null=True)
     expires_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     
 
