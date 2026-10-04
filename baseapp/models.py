@@ -26,13 +26,19 @@ class Skill(BaseModel):
     name = models.CharField(max_length=100, unique=True)
     
     def __str__(self):
-        return self.skill
+        return self.name
     
 class Lang(models.Model):
     name = models.CharField(max_length=50, unique=True)
     country_code = models.CharField(max_length=5)
     
+    def __str__(self):
+        return self.name
+    
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    
+    def __str__(self):
+        return self.name
     
     

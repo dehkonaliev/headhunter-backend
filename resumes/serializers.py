@@ -36,7 +36,7 @@ class ResumeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Resume
         fields = ['id', 'title', 'region', 'expected_salary', 'about', 'skills', 'is_public', 'experiences', 'educations', 'languages']
-        read_only_fields = ['id']
+        read_only_fields = ['id', 'skills']
         
     def get_skills(self, obj):
         return SkillSerializer(obj.skills.all(), many=True).data
@@ -57,3 +57,14 @@ class ResumeSerializer(serializers.ModelSerializer):
             return field_error("resume", "User already have resume object, edit it")
         validated_data['user'] = user
         return super().create(validated_data)
+    
+class SkillAddRemoveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Resume
+        fields = ['skills']
+
+    def update(self, instance, validated_data):
+        skills = validated_data.get('skills', [])
+        instance.skills.add(*skills)
+        return instance
+    
