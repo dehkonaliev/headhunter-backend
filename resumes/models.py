@@ -46,6 +46,8 @@ class Language(BaseModel):
     name = models.ForeignKey(Lang, on_delete=models.PROTECT)
     level = models.CharField(max_length=15, choices=Levels.choices)
     
+    class Meta:
+        unique_together = ['name', 'resume']
     
     
     
