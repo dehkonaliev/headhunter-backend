@@ -12,7 +12,7 @@ class Vacancy(BaseModel):
         DRAFT = "DRAFT", 'draft'
         ARCHIVED = "ARCHIVED", 'archived'
         
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='vacancies')
     title = models.CharField(max_length=300)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     region = models.ForeignKey(District, on_delete=models.SET_NULL, null=True)
