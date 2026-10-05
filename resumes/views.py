@@ -35,7 +35,7 @@ class ResumeCreateAPIView(APIView):
     
 
 class ResumeAPIView(APIView):
-    permission_classes = [IsEmployee, IsOwnerOrReadOnly]
+    permission_classes = [IsEmployee]
     def get(self, request, pk):
         resume = Resume.objects.filter(pk=pk).first()
         if not resume.is_public and request.user != resume.user:
@@ -66,7 +66,7 @@ class SkillAPIView(APIView):
         return success_response(message="Selected skills removed", data=SkillAddRemoveSerializer(resume).data)
     
 class EducationAddAPIView(APIView):
-    permission_classes = [IsEmployee, IsOwnerOrReadOnly]
+    permission_classes = [IsEmployee]
     def post(self, request):
         serializer = EducationSerializer(data=request.data, context={'user': request.user})
         serializer.is_valid(raise_exception=True)
@@ -75,7 +75,7 @@ class EducationAddAPIView(APIView):
         return success_response(message="Education added", data=serializer.data)  
     
 class EducationEditAPIView(APIView):
-    permission_classes = [IsEmployee, IsOwnerOrReadOnly]
+    permission_classes = [IsEmployee]
     def patch(self, request, pk):
         education = Education.objects.filter(pk=pk, resume=request.user.resume).first()
         if not education:
@@ -95,7 +95,7 @@ class EducationEditAPIView(APIView):
         return success_response(message="Education deteled")
         
 class ExperienceAddAPIView(APIView):
-    permission_classes = [IsEmployee, IsOwnerOrReadOnly]
+    permission_classes = [IsEmployee]
     def post(self, request):
         serializer = ExperienceSerializer(data=request.data, context={'user': request.user})
         serializer.is_valid(raise_exception=True)
@@ -104,7 +104,7 @@ class ExperienceAddAPIView(APIView):
         return success_response(message="Education added", data=serializer.data)  
     
 class ExperienceEditAPIView(APIView):
-    permission_classes = [IsEmployee, IsOwnerOrReadOnly]
+    permission_classes = [IsEmployee]
     def patch(self, request, pk):
         experience = Experience.objects.filter(pk=pk, resume=request.user.resume).first()
         if not experience:
@@ -124,8 +124,10 @@ class ExperienceEditAPIView(APIView):
         return success_response(message="Experience deteled")
     
 class LanguageAddAPIView(APIView):
-    permission_classes = [IsEmployee, IsOwnerOrReadOnly]
+    permission_classes = [IsEmployee]
     def post(self, request):
+        if not request.user.resume:
+            return error_response(message="Resume not found, create one first!")
         serializer = LanguageEditSerializer(data=request.data, context={'user': request.user})
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -133,7 +135,7 @@ class LanguageAddAPIView(APIView):
         return success_response(message="Language added", data=serializer.data)  
     
 class LanguageEditAPIView(APIView):
-    permission_classes = [IsEmployee, IsOwnerOrReadOnly]
+    permission_classes = [IsEmployee]
     def patch(self, request, pk):
         language = Language.objects.filter(pk=pk, resume=request.user.resume).first()
         if not language:
