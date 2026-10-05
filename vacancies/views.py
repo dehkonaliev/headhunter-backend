@@ -50,4 +50,20 @@ class VacancyAPIView(APIView):
         serializer.save()
         
         return success_response(message="Vacancy updated", data=serializer.data)
+    
+class VacancyDetailPrivateGet(APIView):
+    permission_classes = [IsEmployer]
+    def get(self, request, pk):
+        vacancy = Vacancy.objects.filter(pk=pk, company__user=request.user).first()
+        if not vacancy:
+            return error_response(message="Vacancy not found", status_code=404)
+        
+        return success_response(message="Vacancy details", data=VacancySerializer(vacancy).data)
+
+class VacancyListPrivate(APIView):
+    permission_classes = [IsEmployer]
+    def get(self, request):
+        vacancies = Vacancy.objects.filter(company__user=request.user).order_by('-created_at')
+        return success_response(message="Your vacancies", data=VacancySerializer(vacancies, many=True).data)
+          
         
