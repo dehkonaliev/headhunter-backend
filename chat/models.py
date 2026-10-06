@@ -3,6 +3,7 @@ from authentication.models import CustomUser
 from applications.models import Application
 from baseapp.models import BaseModel
 from companies.models import Company
+from applications.models import Application
 
 
 class Chat(BaseModel):
@@ -37,6 +38,8 @@ class Message(BaseModel):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
     message_type = models.CharField(max_length=30, choices=MessageTypes.choices)
     context = models.CharField(max_length=10000)
+    application = models.ForeignKey(Application, on_delete=models.SET_NULL, null=True, blank=True)
+    
     
     
 

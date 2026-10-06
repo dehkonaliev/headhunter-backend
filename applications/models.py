@@ -11,15 +11,9 @@ class Application(BaseModel):
     class Status(models.TextChoices):
         NEW = "new", "NEW"
         VIEWED = "viewed", "VIEWED"
-        INVITED = "invited", "INVITED"
-        REJECTED = "rejected", "REJECTED"
+        INTERVIEW = "interview", "INTERVIEW"
+        DISCARD = "discard", "DISCARD"
 
-    TRANSITIONS = {
-        Status.NEW: {Status.VIEWED, Status.INVITED, Status.REJECTED,},
-        Status.VIEWED: {Status.INVITED, Status.REJECTED,},
-        Status.INVITED: {Status.REJECTED,},
-        Status.REJECTED: {Status.INVITED,},
-    }
 
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE, related_name="applications")
     resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name="applications")
