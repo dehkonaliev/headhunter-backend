@@ -4,7 +4,7 @@ from authentication.models import CustomUser
 from baseapp.utils import field_error
 
 class MessageMiniSerializer(serializers.ModelSerializer):
-    context = serializers.ModelSerializer()
+    context = serializers.SerializerMethodField()
     class Meta:
         model = Message
         fields = ['context', 'message_type']
@@ -20,7 +20,7 @@ class ChatMiniEmployeeSerializer(serializers.ModelSerializer):
         fields = ['id', 'company_name', 'last_message']
     
     def get_company_name(self, obj):
-        return obj.company.company_name
+        return obj.company.name
     
     def get_last_message(self, obj):
         last_message = obj.messages.all().order_by('-created_at').first()
