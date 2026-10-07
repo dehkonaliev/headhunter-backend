@@ -3,6 +3,29 @@ from .models import Chat, Message
 from authentication.models import CustomUser
 from baseapp.utils import field_error
 
+class MessageMiniSerializer(serializers.ModelSerializer):
+    context = serializers.ModelSerializer()
+    class Meta:
+        model = Message
+        fields = ['context', 'message_type']
+        
+    def get_context(self, obj):
+        return obj.context[:30] + "..."
+
+class ChatMiniEmployeeSerializer(serializers.ModelSerializer):
+    company_name = serializers.SerializerMethodField()
+    last_message = serializers.SerializerMethodField()
+    class Meta:
+        model = Chat
+        fields = ['id', 'company_name', 'last_message']
+    
+    def get_company_name(self, obj):
+        return obj.company.company_name
+    
+    def get_last_message(self, obj):
+        last_message = obj.messages.all().order_by('-created_at').first()
+        return MessageMiniSerializer(last_message).data
+    
 
 class ChatSerializer(serializers.ModelSerializer):
     class Meta:
