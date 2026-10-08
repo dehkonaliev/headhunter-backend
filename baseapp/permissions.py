@@ -12,6 +12,10 @@ class IsEmployee(BasePermission):
         return (request.user.is_authenticated and request.user.user_role == "EMPLOYEE") \
         or request.method in SAFE_METHODS
         
+class IsEmployeeStrict(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.user_role == "EMPLOYEE"
+        
 class IsEmployer(BasePermission):
     def has_permission(self, request, view):
         return (request.user.is_authenticated and request.user.user_role == "EMPLOYER") \
