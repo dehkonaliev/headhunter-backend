@@ -23,16 +23,15 @@ class ApplicationCreateSerializer(serializers.ModelSerializer):
 
         vacancy = self.context["vacancy"]
 
-        # Vacancy ACTIVE bo'lishi kerak
+       
         if vacancy.status != "ACTIVE":
             raise serializers.ValidationError("Bu vakansiya faol emas.")
 
-        # Vacancy muddati tugagan bo'lsa
+       
         if (vacancy.expires_at and vacancy.expires_at < timezone.now()):
             raise serializers.ValidationError("Bu vakansiyaning muddati tugagan.")
 
-        # Shu resume bilan shu vacancyga
-        # oldin murojaat qilinganmi?
+       
         exists = Application.objects.filter(vacancy=vacancy,resume=attrs["resume"]).exists()
 
         if exists:
