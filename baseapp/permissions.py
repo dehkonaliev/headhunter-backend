@@ -6,6 +6,9 @@ class IsOwnerOrReadOnly(BasePermission):
         return (request.user.is_authenticated and request.user == obj.user) \
         or request.method in SAFE_METHODS
         
+class IsOwnerStrict(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return request.user.is_authenticated and request.user == obj.user   
         
 class IsEmployee(BasePermission):
     def has_permission(self, request, view):

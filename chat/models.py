@@ -10,7 +10,7 @@ class Chat(BaseModel):
     class ChatStatus(models.TextChoices):
         ACTIVE = "ACTIVE", 'active'
         BLOCKED = "BLOCKED", 'blocked'
-    employee = models.ForeignKey(
+    user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE,
         related_name='my_chats', 
         limit_choices_to={'user_role': 'EMPLOYEE'}
@@ -23,7 +23,7 @@ class Chat(BaseModel):
     status = models.CharField(max_length=30, choices=ChatStatus.choices, default=ChatStatus.ACTIVE)
     
     class Meta:
-        unique_together = ['company', 'employee']
+        unique_together = ['company', 'user']
     
 
 
