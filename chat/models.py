@@ -34,11 +34,16 @@ class Message(BaseModel):
         INTERVIEW = "INTERVIEW", 'interview'
         ARCHIVE = "ARCHIVE", 'archive'
         MESSAGE = "MESSAGE", 'message'
+        
+    class SenderChoices(models.TextChoices):
+        EMPLOYEE = "EMPLOYEE", "employee"
+        COMPANY = "COMPANY", "company"
     
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
     message_type = models.CharField(max_length=30, choices=MessageTypes.choices)
     context = models.CharField(max_length=10000)
     application = models.ForeignKey(Application, on_delete=models.SET_NULL, null=True, blank=True)
+    sender = models.CharField(max_length=20, choices=SenderChoices.choices)
     
     
     

@@ -56,9 +56,26 @@ class ChatSerializer(serializers.ModelSerializer):
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = ['id', 'chat', 'message_type', 'context', 'application']
-        read_only_fields = ['id', 'message_type', 'application']
-    
+        fields = ['id', 'chat', 'message_type', 'context', 'application', 'sender']
+        read_only_fields = ['id', 'message_type', 'application', 'sender']
+
+class MessageSendSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ['id', 'chat', 'message_type', 'context', 'sender']
+        read_only_fields = ['id', 'message_type', 'sender']
+        
     def create(self, validated_data):
+        sender = self.context.get('user')
+        if sender.user_role == CustomUser.UserRole.EMPLOYEE:
+            sender_name = CustomUser.UserRole.EMPLOYEE
+        elif sender.user_role == CustomUser.UserRole.EMPLOYER:
+            sender_name = CustomUser.UserRole.EMPLOYER
+        else:
+            return field_error("sender", "Sender not found")
+        
+        validated_data['sender'] = sender_name
         validated_data['message_type'] = Message.MessageTypes.MESSAGE
         return super().create(validated_data)
+        
+        
