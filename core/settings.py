@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
     
     
     'baseapp',
@@ -53,7 +55,8 @@ INSTALLED_APPS = [
     'resumes',
     'vacancies',
     'applications',
-    'chat'
+    'chat',
+    
 ]
 
 MIDDLEWARE = [
@@ -101,6 +104,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf-spectacular.openapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
