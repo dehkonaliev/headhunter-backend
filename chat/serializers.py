@@ -30,14 +30,14 @@ class ChatMiniEmployeeSerializer(serializers.ModelSerializer):
 class ChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chat
-        fields = ['id', 'employee', 'company', 'status']
+        fields = ['id', 'user', 'company', 'status']
         read_only_fields = ['id', 'status']
         
-    def validate_employee(self, employee):
-        if not employee.resume:
-            return field_error("employee", "You do not have a resume, please create one first")
+    def validate_employee(self, user):
+        if not user.resume:
+            return field_error("user", "You do not have a resume, please create one first")
         
-        return employee
+        return user
     
     def validate_company(self, company):
         if not company.is_verified:
@@ -47,9 +47,9 @@ class ChatSerializer(serializers.ModelSerializer):
     
     def validate(self, attrs):
         company = attrs['company']
-        employee = attrs['employee']
+        employee = attrs['user']
         
-        if Chat.objects.filter(employee=employee, company=company).exists():
+        if Chat.objects.filter(user=employee, company=company).exists():
             return field_error("non_field_error", "This chat already exists")
         
 
@@ -63,18 +63,21 @@ class MessageSendSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ['id', 'chat', 'message_type', 'context', 'sender']
-        read_only_fields = ['id', 'message_type', 'sender']
+        read_only_fields = ['id', 'chat', 'message_type', 'sender']
+    
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)
         
     def create(self, validated_data):
         sender = self.context.get('user')
-        if sender.user_role == CustomUser.UserRole.EMPLOYEE:
-            sender_name = CustomUser.UserRole.EMPLOYEE
-        elif sender.user_role == CustomUser.UserRole.EMPLOYER:
-            sender_name = CustomUser.UserRole.EMPLOYER
-        else:
-            return field_error("sender", "Sender not found")
+        chat = self.context.get('chat')
         
-        validated_data['sender'] = sender_name
+        if sender.user_role == CustomUser.UserRole.EMPLOYEE and chat.user != sender:
+            return field_error("chat", "Chat not found")
+        elif sender.user_role == CustomUser.UserRole.EMPLOYER and chat.company.user != sender:
+            return field_error('chat', "Chat not found")
+        elif sender.user_role not in CustomUser.UserRole.choices:
+            return field_error("user", "User not found")     
         validated_data['message_type'] = Message.MessageTypes.MESSAGE
         return super().create(validated_data)
         
